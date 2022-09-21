@@ -1,0 +1,13 @@
+.terraform.lock.hcl
+terraform-aws
+terraform-aws.pub
+terraform.tfstate
+terraform.tfstate.backup
+.terraform
+main.tf
+.pub
+.exe
+desktop.ini
+.desktop.ini
+/ansible/ecommerce.jar
+

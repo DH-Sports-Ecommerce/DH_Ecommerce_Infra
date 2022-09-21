@@ -1,0 +1,80 @@
+- hosts: all
+  become: yes
+  tasks:
+  - name: alterando nome dos hosts
+    hostname:
+      name: "{{ new_hostname }}"
+  - name: instalar dependencias do docker
+    apt: # apt-get install apt-transport-https 
+      name: "{{item}}"
+      state: present 
+      update_cache: yes
+    loop:
+      - apt-transport-https #0
+      - ca-certificates #1
+      - curl
+      - gnupg-agent
+      - software-properties-common  
+
+  - name: adicionar chave GPG
+    apt_key:
+      url: https://download.docker.com/linux/ubuntu/gpg
+      state: present
+
+  - name: adicionar repositório Docker de instalador do docker
+    apt_repository:
+      repo: deb https://download.docker.com/linux/ubuntu bionic stable
+      state: present
+
+  - name: instala docker
+    apt:
+      name: "{{item}}"
+      state: latest
+      update_cache: yes
+    loop:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+
+  - name: instalar python e pip ansible precisa para poder iniciar o Docker, executar
+    apt:
+      name: "{{item}}"
+      state: latest
+      update_cache: yes
+    loop:
+      - python3
+      - pip
+
+  - name: Instalar recurso docker ansible precisa
+    pip:
+      name: docker
+
+  handlers:
+    - name: reiniciar docker
+      service: 
+        name: docker 
+        state: restarted
+
+
+- hosts: backend
+  become: yes
+  tasks:        
+  - name: Criar container com aplicacao Java
+    docker_container:
+      name: ecommerce
+      image: cypherbold/ecommerce
+      expose:
+      - 9000
+      ports:
+      - "9000:9000"
+      state: started
+
+  - name: Criar container do MySQL
+    docker_container:
+      name: dbecommerce
+      image: cypherbold/dbecommerce
+      expose:
+      - 3306
+      ports:
+      - "3306:3306"
+      state: started
