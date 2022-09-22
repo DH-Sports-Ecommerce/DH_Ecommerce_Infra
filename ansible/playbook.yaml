@@ -35,6 +35,7 @@
       - docker-ce
       - docker-ce-cli
       - containerd.io
+      - docker-compose-plugin # adiciona 
 
   - name: instalar python e pip ansible precisa para poder iniciar o Docker, executar
     apt:
@@ -62,17 +63,17 @@
   - name: Criar container com aplicacao Java
     docker_container:
       name: ecommerce
-      image: cypherbold/ecommerce
+      image: cypherbold/ecommerce:1.01
       expose:
-      - 9000
+      - 8080
       ports:
-      - "9000:9000"
+      - "8080:8080"
       state: started
 
   - name: Criar container do MySQL
     docker_container:
       name: dbecommerce
-      image: cypherbold/dbecommerce
+      image: cypherbold/dbecommerce:1.01
       expose:
       - 3306
       ports:
