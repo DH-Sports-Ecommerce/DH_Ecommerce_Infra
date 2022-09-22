@@ -80,8 +80,8 @@ resource "aws_security_group" "sg_acesso_tomcat_publico" {
   #liberando a entrada pela porta 8080 - Tomcat
   ingress {
     description      = "Tomcat"
-    from_port        = 9000
-    to_port          = 9000
+    from_port        = 8080
+    to_port          = 8080
     protocol         = "tcp"
     cidr_blocks      = [var.bloco_ip_destino_publico]
   }

@@ -1,80 +1,97 @@
 - hosts: all
-  become: yes
+  become: yes #vira sudo sempre que precisar
   tasks:
-  - name: alterando nome dos hosts
-    hostname:
-      name: "{{ new_hostname }}"
-  - name: instalar dependencias do docker
-    apt: # apt-get install apt-transport-https 
-      name: "{{item}}"
-      state: present 
-      update_cache: yes
-    loop:
-      - apt-transport-https #0
-      - ca-certificates #1
-      - curl
-      - gnupg-agent
-      - software-properties-common  
+    - name: alterando nome dos hosts
+      hostname:
+        name: '{{ new_hostname }}'
 
-  - name: adicionar chave GPG
-    apt_key:
-      url: https://download.docker.com/linux/ubuntu/gpg
-      state: present
+    - name: instalar dependencias do docker e java para compilar
+      apt: # apt-get install apt-transport-https
+        name: '{{item}}'
+        state: present
+        update_cache: yes
+      loop:
+        - apt-transport-https #0
+        - ca-certificates #1
+        - curl
+        - gnupg-agent
+        - software-properties-common
+        - openjdk-17-jdk
+        - maven
 
-  - name: adicionar repositório Docker de instalador do docker
-    apt_repository:
-      repo: deb https://download.docker.com/linux/ubuntu bionic stable
-      state: present
+    - name: adicionar chave GPG
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
 
-  - name: instala docker
-    apt:
-      name: "{{item}}"
-      state: latest
-      update_cache: yes
-    loop:
-      - docker-ce
-      - docker-ce-cli
-      - containerd.io
+    - name: adicionar repositório d0 instalador do docker
+      apt_repository:
+        repo: deb https://download.docker.com/linux/ubuntu bionic stable
+        state: present
 
-  - name: instalar python e pip ansible precisa para poder iniciar o Docker, executar
-    apt:
-      name: "{{item}}"
-      state: latest
-      update_cache: yes
-    loop:
-      - python3
-      - pip
+    - name: instala docker
+      apt:
+        name: '{{item}}'
+        state: latest
+        update_cache: yes
+      loop:
+        - docker-ce
+        - docker-ce-cli
+        - containerd.io
+        - docker-compose
 
-  - name: Instalar recurso docker ansible precisa
-    pip:
-      name: docker
+    - name: instalar python e pip ansible precisa para poder iniciar o Docker, executar
+      apt:
+        name: '{{item}}'
+        state: latest
+        update_cache: yes
+      loop:
+        - python3
+        - pip
+
+    - name: Instalar recurso docker ansible precisa
+      pip:
+        name: docker
 
   handlers:
     - name: reiniciar docker
-      service: 
-        name: docker 
+      service:
+        name: docker
         state: restarted
 
-
-- hosts: backend
+- hosts: all
   become: yes
-  tasks:        
-  - name: Criar container com aplicacao Java
-    docker_container:
-      name: ecommerce
-      image: cypherbold/ecommerce
-      expose:
-      - 9000
-      ports:
-      - "9000:9000"
-      state: started
+  tasks:
+    - name: clone pasta target
+      ansible.builtin.git:
+        # o repositório que vamos clonar
+        repo: https://github.com/DH-Sports-Ecommerce/DH_Ecommerce_Back_End.git
+        # onde vamos clonar
+        dest: /home/ubuntu/DH_Ecommerce_Back_End/
+        # qual é a branch que vamos clonar
+        version: issue17
+        # aqui estopu dizendo que quero seja feito update sempre que rodar a tarefa
+        update: yes
+        # force pq eu quero, baixa e pronto. eu mandei.
+        force: yes
 
-  - name: Criar container do MySQL
-    docker_container:
-      name: dbecommerce
-      image: cypherbold/dbecommerce
-      expose:
-      - 3306
-      ports:
-      - "3306:3306"
-      state: started
+    - name: mvn install
+      shell:
+        cmd: 'sudo mvn install'
+        chdir: /home/ubuntu/DH_Ecommerce_Back_End/
+      register: debug
+
+    - name: Subir docker-compose mysql
+      become: true
+      shell:
+        cmd: 'docker-compose -f docker-compose-mysql.yml up -d'
+        chdir: /home/ubuntu/DH_Ecommerce_Back_End/
+
+    - name: Subir docker-compose backend
+      become: true
+      shell:
+        cmd: 'docker-compose -f docker-compose.yml up -d'
+        chdir: /home/ubuntu/DH_Ecommerce_Back_End/
+
+    - debug:
+        msg: '{{ debug }}'
