@@ -1,5 +1,5 @@
 variable "usuario" {
-    default = "grupo04"
+    default = "kinglion"
 }
 variable "regiao" {
      default = "us-west-1"
