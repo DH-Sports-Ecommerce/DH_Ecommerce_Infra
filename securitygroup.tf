@@ -30,24 +30,6 @@ resource "aws_security_group" "sg_acesso_ssh_local" {
   }
 }
 
-#SG de permitindo o acesso a porta 80 para toda a internet, 
-#pois quem for acessar nosso front, estara na internet
-resource "aws_security_group" "sg_acesso_web_publico" {
-  description = "sg acesso web publico"
-  vpc_id = aws_vpc.vpc.id
-  #liberando a entrada pela porta 80 - HTTP
-  ingress {
-    description      = "HTTP"
-    from_port        = 80
-    to_port          = 80
-    protocol         = "tcp"
-    cidr_blocks      = [var.bloco_ip_destino_publico]
-  }
-  tags = {
-    "Name" = "${var.usuario}-sg-web-publico"
-  }
-}
-
 #liberando SSH(22) para a internet, mas poderia ser para o IP da sua empresa
 #pois nossa VM de gerenciamento, tem que ser acessivel de fora da VPC
 resource "aws_security_group" "sg_acesso_ssh_publico" {
@@ -69,6 +51,24 @@ resource "aws_security_group" "sg_acesso_ssh_publico" {
   }
   tags = {
     "Name" = "${var.usuario}-sg-ssh-publico"
+  }
+}
+
+#SG de permitindo o acesso a porta 80 para toda a internet, 
+#pois quem for acessar nosso front, estara na internet
+resource "aws_security_group" "sg_acesso_web_publico" {
+  description = "sg acesso web publico"
+  vpc_id = aws_vpc.vpc.id
+  #liberando a entrada pela porta 80 - HTTP
+  ingress {
+    description      = "HTTP"
+    from_port        = 80
+    to_port          = 80
+    protocol         = "tcp"
+    cidr_blocks      = [var.bloco_ip_destino_publico]
+  }
+  tags = {
+    "Name" = "${var.usuario}-sg-web-publico"
   }
 }
 
@@ -105,5 +105,41 @@ resource "aws_security_group" "sg_acesso_mysql_publico" {
   }
   tags = {
     "Name" = "${var.usuario}-sg-mysql-publico"
+  }
+}
+
+#SG de permitindo o acesso a porta 9000 para toda a internet, 
+#pois quem for acessar nosso front, estara na internet
+resource "aws_security_group" "sg_acesso_portainerui_publico" {
+  description = "sg acesso web publico"
+  vpc_id = aws_vpc.vpc.id
+  #liberando a entrada pela porta 8080 - Tomcat
+  ingress {
+    description      = "Portainer UI"
+    from_port        = 9443
+    to_port          = 9443
+    protocol         = "tcp"
+    cidr_blocks      = [var.bloco_ip_destino_publico]
+  }
+  tags = {
+    "Name" = "${var.usuario}-sg-portainerui-publico"
+  }
+}
+
+#SG de permitindo o acesso a porta 9000 para toda a internet, 
+#pois quem for acessar nosso front, estara na internet
+resource "aws_security_group" "sg_acesso_portainertunel_publico" {
+  description = "sg acesso web publico"
+  vpc_id = aws_vpc.vpc.id
+  #liberando a entrada pela porta 8080 - Tomcat
+  ingress {
+    description      = "Portainer Tunel"
+    from_port        = 8000
+    to_port          = 8000
+    protocol         = "tcp"
+    cidr_blocks      = [var.bloco_ip_destino_publico]
+  }
+  tags = {
+    "Name" = "${var.usuario}-sg-portainertunel-publico"
   }
 }

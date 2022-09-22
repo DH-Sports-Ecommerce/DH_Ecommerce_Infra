@@ -22,7 +22,9 @@ resource "aws_instance" "ec2_instance" {
   #aqui fazemos o vinculo com os grupos de segurança
   #se reparar estamos pedindo o grupo nidio_sg_ssh(libera a porta 22 para dentro da VPC)
   # e o nidio_sg_web(libera a porta 80 para ser acessivel pela web)
-  vpc_security_group_ids = ["${aws_security_group.sg_acesso_ssh_local.id}", "${aws_security_group.sg_acesso_web_publico.id}", "${aws_security_group.sg_acesso_tomcat_publico.id}", "${aws_security_group.sg_acesso_mysql_publico.id}"]
+
+  vpc_security_group_ids = ["${aws_security_group.sg_acesso_ssh_local.id}","${aws_security_group.sg_acesso_web_publico.id}","${aws_security_group.sg_acesso_tomcat_publico.id}","${aws_security_group.sg_acesso_mysql_publico.id}","${aws_security_group.sg_acesso_portainerui_publico.id}","${aws_security_group.sg_acesso_portainertunel_publico.id}" ]
+
   #vinculando nossa instancia(VM) a subrede publica kubernetes
   subnet_id = aws_subnet.subrede_publica_docker.id
 }

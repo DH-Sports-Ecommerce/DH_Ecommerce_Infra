@@ -1,5 +1,6 @@
 variable "usuario" {
-  default = "T-FT-A2"
+
+    default = "kinglion"
 }
 variable "regiao" {
   default = "us-west-1"

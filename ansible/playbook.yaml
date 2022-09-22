@@ -81,6 +81,7 @@
         chdir: /home/ubuntu/DH_Ecommerce_Back_End/
       register: debug
 
+
     - name: Subir docker-compose mysql
       become: true
       shell:
@@ -94,4 +95,4 @@
         chdir: /home/ubuntu/DH_Ecommerce_Back_End/
 
     - debug:
-        msg: '{{ debug }}'
+        msg: "{{ debug }}"    
