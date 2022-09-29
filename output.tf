@@ -6,12 +6,12 @@ output "ec2_instance_ip_publico" {
   #o que vai ser impresso, estou pedindo o IP publico da instancia
   #que vai ser criar com o nome de ec2_kubernetes no lugar do * 
   #vai entrar o do contador
-  value = aws_instance.ec2_instance.*.public_ip
+  value = aws_instance.ec2_docker.*.public_ip
 }
 output "ec2_instance_ip_privado" {
   description = "IP privado ec2 docker"
   #pedindo para ser impresso o IP privado das maquinas do front
-  value = aws_instance.ec2_instance.*.private_ip
+  value = aws_instance.ec2_docker.*.private_ip
 }
 
 output "ec2_gerenciamento_ip_publico" {

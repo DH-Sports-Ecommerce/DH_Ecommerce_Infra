@@ -90,14 +90,14 @@
       - "8080:8080"
       state: started
 
-  - name: Criar container Backend
+  - name: Criar container Front
     docker_container:
-      name: back_server_ecommerce
+      name: front_server_ecommerce
       image: rllimaferreira/front_server_ecommerce
       networks: 
       - name: servers
       ports: 
-      - "3000:3000"
+      - "80:80"
       state: started
 
 # mysql_server_ecommerce
