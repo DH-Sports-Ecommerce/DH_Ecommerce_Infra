@@ -59,7 +59,7 @@
         name: docker
         state: restarted
 
-- hosts: backend
+- hosts: all
   become: yes
   tasks:
 
@@ -73,7 +73,7 @@
   - name: Criar container Banco de dados
     docker_container:
       name: mysql_server_ecommerce
-      image: cypherbold/ecommerce_mysql
+      image: rllimaferreira/mysql_server_ecommerce
       networks: 
       - name: servers
       ports: 
@@ -83,13 +83,26 @@
   - name: Criar container Backend
     docker_container:
       name: back_server_ecommerce
-      image: cypherbold/ecommerce_back
+      image: rllimaferreira/back_server_ecommerce
       networks: 
       - name: servers
       ports: 
       - "8080:8080"
       state: started
 
+  - name: Criar container Backend
+    docker_container:
+      name: back_server_ecommerce
+      image: rllimaferreira/front_server_ecommerce
+      networks: 
+      - name: servers
+      ports: 
+      - "3000:3000"
+      state: started
+
+# mysql_server_ecommerce
+# back_server_ecommerce
+# front_server_ecommerce
 
 
     # - name: clone pasta target

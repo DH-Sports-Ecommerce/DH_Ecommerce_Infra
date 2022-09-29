@@ -1,6 +1,6 @@
 variable "usuario" {
 
-    default = "kinglion"
+    default = "kinglionsports"
 }
 variable "regiao" {
   default = "us-west-1"

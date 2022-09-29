@@ -2,8 +2,8 @@
 #1º parametro entre "" é o recurso
 provider "aws" {
   region = var.regiao
-   access_key = ""
-   secret_key = ""
+  #  access_key = ""
+  #  secret_key = ""
 }
 
 
