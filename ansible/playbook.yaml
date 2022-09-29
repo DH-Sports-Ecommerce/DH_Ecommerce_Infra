@@ -62,37 +62,80 @@
 - hosts: all
   become: yes
   tasks:
-    - name: clone pasta target
-      ansible.builtin.git:
-        # o repositório que vamos clonar
-        repo: https://github.com/DH-Sports-Ecommerce/DH_Ecommerce_Back_End.git
-        # onde vamos clonar
-        dest: /home/ubuntu/DH_Ecommerce_Back_End/
-        # qual é a branch que vamos clonar
-        version: issue17
-        # aqui estopu dizendo que quero seja feito update sempre que rodar a tarefa
-        update: yes
-        # force pq eu quero, baixa e pronto. eu mandei.
-        force: yes
 
-    - name: mvn install
-      shell:
-        cmd: 'sudo mvn install'
-        chdir: /home/ubuntu/DH_Ecommerce_Back_End/
-      register: debug
+  - name: Criar rede servers
+    docker_network: 
+      name: servers
+      driver: bridge
+      state: present
+      force: yes
+
+  - name: Criar container Banco de dados
+    docker_container:
+      name: mysql_server_ecommerce
+      image: rllimaferreira/mysql_server_ecommerce
+      networks: 
+      - name: servers
+      ports: 
+      - "3306:3306"
+      state: started
+
+  - name: Criar container Backend
+    docker_container:
+      name: back_server_ecommerce
+      image: rllimaferreira/back_server_ecommerce
+      networks: 
+      - name: servers
+      ports: 
+      - "8080:8080"
+      state: started
+
+  - name: Criar container Backend
+    docker_container:
+      name: back_server_ecommerce
+      image: rllimaferreira/front_server_ecommerce
+      networks: 
+      - name: servers
+      ports: 
+      - "3000:3000"
+      state: started
+
+# mysql_server_ecommerce
+# back_server_ecommerce
+# front_server_ecommerce
 
 
-    - name: Subir docker-compose mysql
-      become: true
-      shell:
-        cmd: 'docker-compose -f docker-compose-mysql.yml up -d'
-        chdir: /home/ubuntu/DH_Ecommerce_Back_End/
+    # - name: clone pasta target
+    #   ansible.builtin.git:
+    #     # o repositório que vamos clonar
+    #     repo: https://github.com/DH-Sports-Ecommerce/DH_Ecommerce_Back_End.git
+    #     # onde vamos clonar
+    #     dest: /home/ubuntu/DH_Ecommerce_Back_End/
+    #     # qual é a branch que vamos clonar
+    #     version: issue17
+    #     # aqui estopu dizendo que quero seja feito update sempre que rodar a tarefa
+    #     update: yes
+    #     # force pq eu quero, baixa e pronto. eu mandei.
+    #     force: yes
 
-    - name: Subir docker-compose backend
-      become: true
-      shell:
-        cmd: 'docker-compose -f docker-compose.yml up -d'
-        chdir: /home/ubuntu/DH_Ecommerce_Back_End/
+    # - name: mvn install
+    #   shell:
+    #     cmd: 'sudo mvn install'
+    #     chdir: /home/ubuntu/DH_Ecommerce_Back_End/
+    #   register: debug
 
-    - debug:
-        msg: "{{ debug }}"    
+
+    # - name: Subir docker-compose mysql
+    #   become: true
+    #   shell:
+    #     cmd: 'docker-compose -f docker-compose-mysql.yml up -d'
+    #     chdir: /home/ubuntu/DH_Ecommerce_Back_End/
+
+    # - name: Subir docker-compose backend
+    #   become: true
+    #   shell:
+    #     cmd: 'docker-compose -f docker-compose.yml up -d'
+    #     chdir: /home/ubuntu/DH_Ecommerce_Back_End/
+
+    # - debug:
+    #     msg: "{{ debug }}"    
