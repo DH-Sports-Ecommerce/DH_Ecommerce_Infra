@@ -1,7 +1,7 @@
 #instando = VM
 resource "aws_instance" "ec2_docker" {
   #falando pra criar dois recursos
-  count = 2
+  count = 1
   #a Amazon Machine Image que será usada
   ami = var.imagem_instancia_ami
   #tipo da instancia, ou seja o tipo de hardware que será usado

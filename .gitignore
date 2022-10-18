@@ -10,3 +10,4 @@ desktop.ini
 .desktop.ini
 /ansible/ecommerce.jar
 
+.terraform.tfstate.lock.info

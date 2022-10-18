@@ -59,46 +59,75 @@
         name: docker
         state: restarted
 
-- hosts: all
-  become: yes
-  tasks:
+# - hosts: all
+  # become: yes
+  # tasks:
 
-  - name: Criar rede servers
-    docker_network: 
-      name: servers
-      driver: bridge
-      state: present
-      force: yes
+  # - name: Criar rede servers
+  #   docker_network: 
+  #     name: servers
+  #     driver: bridge
+  #     state: present
+  #     force: yes
 
-  - name: Criar container Banco de dados
-    docker_container:
-      name: mysql_server_ecommerce
-      image: rllimaferreira/mysql_server_ecommerce
-      networks: 
-      - name: servers
-      ports: 
-      - "3306:3306"
-      state: started
+  # - name: remover imagem
+  #   shell:
+  #       cmd: 'docker rmi cypherbold/mysql_server_ecommerce'
 
-  - name: Criar container Backend
-    docker_container:
-      name: back_server_ecommerce
-      image: rllimaferreira/back_server_ecommerce
-      networks: 
-      - name: servers
-      ports: 
-      - "8080:8080"
-      state: started
+  # # - name: remover container
+  # #   shell:
+  # #       cmd: 'docker container rm rllimaferreira/mysql_server_ecommerce'  
 
-  - name: Criar container Front
-    docker_container:
-      name: front_server_ecommerce
-      image: rllimaferreira/front_server_ecommerce
-      networks: 
-      - name: servers
-      ports: 
-      - "80:80"
-      state: started
+  # - name: Criar container Banco de dados
+  #   docker_container:
+  #     name: mysql_server_ecommerce
+  #     image: cypherbold//mysql_server_ecommerce
+  #     networks: 
+  #     - name: servers
+  #     ports: 
+  #     - "3306:3306"
+  #     volumes:
+  #     - /home/ubuntu:/var/lib/mysql
+  #     recreate: true
+
+  # - name: remover imagem
+  #   shell:
+  #       cmd: 'docker rmi cypherbold/back_server_ecommerce'
+
+  # # - name: remover container
+  # #   shell:
+  # #       cmd: 'docker container rm rllimaferreira/back_server_ecommerce'  
+
+  # - name: Criar container Backend
+  #   docker_container:
+  #     name: back_server_ecommerce
+  #     image: cypherbold/back_server_ecommerce
+  #     networks: 
+  #     - name: servers
+  #     ports: 
+  #     - "8080:8080"
+  #     state: started
+  #     recreate: true
+
+  # - name: remover imagem
+  #   shell:
+  #       cmd: 'docker rmi cypherbold/front_server_ecommerce'
+
+  # # - name: remover container
+  # #   shell:
+  # #       cmd: 'docker container rm rllimaferreira/front_server_ecommerce'    
+
+  # - name: Criar container Front
+  #   docker_container:
+  #     name: front_server_ecommerce
+  #     image: cypherbold/front_server_ecommerce
+  #     networks: 
+  #     - name: servers
+  #     ports: 
+  #     - "80:80"
+  #     state: started
+  #     recreate: true
+
 
 # mysql_server_ecommerce
 # back_server_ecommerce

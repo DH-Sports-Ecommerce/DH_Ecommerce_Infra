@@ -19,3 +19,13 @@ ansible_ssh_private_key_file=/home/ubuntu/.ssh/terraform-aws
 #ansible-playbook playbook.yaml -i inventory
 #ansible-playbook mysqlbook.yaml -i inventory
 #ansible-playbook backendbook.yaml -i inventory
+
+# ec2_gerenciamento_ip_publico = [
+#   "54.67.115.58",
+# ]
+# ec2_instance_ip_privado = [
+#   "10.0.1.119",
+# ]
+# ec2_instance_ip_publico = [
+#   "52.53.195.111",
+# ]
